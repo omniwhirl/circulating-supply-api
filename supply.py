@@ -9,6 +9,7 @@ TOKEN_ADDRESS = "0xfc5a11d0fe8b5ad23b8a643df5eae60b979ce1bf"
 TOKEN_DECIMAL_ADJUSTMENT = 10**18
 
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 total_supply_url = f"https://api.polygonscan.com/api?module=stats&action=tokensupply&contractaddress={TOKEN_ADDRESS}&apikey={API_KEY}"
 wallet_supply_url = f"https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress={TOKEN_ADDRESS}&address=wallet_address&tag=latest&apikey={API_KEY}"
