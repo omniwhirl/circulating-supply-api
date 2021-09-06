@@ -28,12 +28,11 @@ def get_supply():
     ecosystem_funds = '0xd4C0799903364c745cA28F22dbf26dBd27ac790F'
     team_funds = '0xf0035bdf672067cF2e6Be75dED6F4e008EE9536d'
     otc_funds = '0xc4CdD4C5C730b32faDb4cC38Ec55b4E24ab69CAe'
-    vested_funds = '0xe23d6996056218D3905dC03B6CEd2c2dD85064fB'
+    vested_funds = '0x5ED75c4FC1Ed359AAe12E142c570F2A8AC492402'
     temporary_holding = '0x18049311bdf789d9ea80f3a5ffad754fa86d2a8d'
-    vesting_holding = '0x112035De2a732E9D42A65957a637332f081e5c3e'
 
     accounts = [community_funds, ecosystem_funds,
-                team_funds, otc_funds, vested_funds, temporary_holding, vesting_holding]
+                team_funds, otc_funds, vested_funds, temporary_holding]
 
     for account in accounts:
         wallet_balance = int(json.loads(requests.get(
