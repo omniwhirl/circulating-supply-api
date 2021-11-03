@@ -5,14 +5,16 @@ import os
 
 
 API_KEY = os.environ.get('API_KEY', None)
-TOKEN_ADDRESS = "0xfc5a11d0fe8b5ad23b8a643df5eae60b979ce1bf"
+TOKEN_ADDRESS_OLD = "0xfc5a11d0fe8b5ad23b8a643df5eae60b979ce1bf"
+TOKEN_ADDRESS_NEw = "0x4f6cbaca3151f7746273004fd7295933a9b70e69"
 TOKEN_DECIMAL_ADJUSTMENT = 10**18
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-total_supply_url = f"https://api.polygonscan.com/api?module=stats&action=tokensupply&contractaddress={TOKEN_ADDRESS}&apikey={API_KEY}"
-wallet_supply_url = f"https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress={TOKEN_ADDRESS}&address=wallet_address&tag=latest&apikey={API_KEY}"
+total_supply_url_old = f"https://api.polygonscan.com/api?module=stats&action=tokensupply&contractaddress={TOKEN_ADDRESS_OLD}&apikey={API_KEY}"
+total_supply_url_new = f"https://api.polygonscan.com/api?module=stats&action=tokensupply&contractaddress={TOKEN_ADDRESS_NEW}&apikey={API_KEY}"
+wallet_supply_url = f"https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress={TOKEN_ADDRESS_OLD}&address=wallet_address&tag=latest&apikey={API_KEY}"
 
 
 def adjust_decimals(num):
@@ -20,9 +22,11 @@ def adjust_decimals(num):
 
 
 def get_supply():
-    total_supply = int(json.loads(
-        requests.get(total_supply_url).text)['result'])
-    circulating_supply = total_supply
+    total_supply_old = int(json.loads(
+        requests.get(total_supply_url_old).text)['result'])
+    total_supply_new = int(json.loads(
+        requests.get(total_supply_url_new).text)['result'])
+    circulating_supply = total_supply_old + total_supply_new
 
     community_funds = '0xb55394d9860b781B817B634F9c6C5d5dBA35A934'
     ecosystem_funds = '0xd4C0799903364c745cA28F22dbf26dBd27ac790F'
