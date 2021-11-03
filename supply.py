@@ -26,7 +26,8 @@ def get_supply():
         requests.get(total_supply_url_old).text)['result'])
     total_supply_new = int(json.loads(
         requests.get(total_supply_url_new).text)['result'])
-    circulating_supply = total_supply_old + total_supply_new
+    total_supply = total_supply_old + total_supply_new
+    circulating_supply = total_supply
 
     community_funds = '0xb55394d9860b781B817B634F9c6C5d5dBA35A934'
     ecosystem_funds = '0xd4C0799903364c745cA28F22dbf26dBd27ac790F'
