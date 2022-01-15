@@ -2,6 +2,7 @@ import requests
 import json
 from flask import Flask, jsonify
 import os
+import time
 
 
 API_KEY = os.environ.get('API_KEY', None)
@@ -35,17 +36,25 @@ def get_supply():
     team_funds = '0xf0035bdf672067cF2e6Be75dED6F4e008EE9536d'
     otc_funds = '0xc4CdD4C5C730b32faDb4cC38Ec55b4E24ab69CAe'
     vested_funds = '0x5ED75c4FC1Ed359AAe12E142c570F2A8AC492402'
-    temporary_holding = '0x18049311bdf789d9ea80f3a5ffad754fa86d2a8d' #for anonymity mining rewards
+    # for anonymity mining rewards
+    temporary_holding = '0x18049311bdf789d9ea80f3a5ffad754fa86d2a8d'
+    reward_distributor = '0x70509B8EDa83702AeB783721029e158c64712fD8'
 
-    accounts = [community_funds, ecosystem_funds,
-                team_funds, otc_funds, vested_funds, temporary_holding]
+    old_accounts = [team_funds, vested_funds]
+    new_accounts = [community_funds, ecosystem_funds,
+                    otc_funds, temporary_holding, reward_distributor]
 
-    for account in accounts:
+    # Blacklisting for old token
+    for account in old_accounts:
         wallet_balance_old = int(json.loads(requests.get(
             wallet_supply_url_old.replace('wallet_address', account)).text)['result'])
+        circulating_supply -= wallet_balance_old
+    time.sleep(1)
+    # Blacklisting for new token
+    for account in new_accounts:
         wallet_balance_new = int(json.loads(requests.get(
             wallet_supply_url_new.replace('wallet_address', account)).text)['result'])
-        circulating_supply -= wallet_balance_old + wallet_balance_new
+        circulating_supply -= wallet_balance_new
 
     return adjust_decimals(total_supply), adjust_decimals(circulating_supply)
 
