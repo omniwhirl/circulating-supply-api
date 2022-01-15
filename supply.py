@@ -14,7 +14,8 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 total_supply_url_old = f"https://api.polygonscan.com/api?module=stats&action=tokensupply&contractaddress={TOKEN_ADDRESS_OLD}&apikey={API_KEY}"
 total_supply_url_new = f"https://api.polygonscan.com/api?module=stats&action=tokensupply&contractaddress={TOKEN_ADDRESS_NEW}&apikey={API_KEY}"
-wallet_supply_url = f"https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress={TOKEN_ADDRESS_OLD}&address=wallet_address&tag=latest&apikey={API_KEY}"
+wallet_supply_url_old = f"https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress={TOKEN_ADDRESS_OLD}&address=wallet_address&tag=latest&apikey={API_KEY}"
+wallet_supply_url_new = f"https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress={TOKEN_ADDRESS_NEW}&address=wallet_address&tag=latest&apikey={API_KEY}"
 
 
 def adjust_decimals(num):
@@ -34,15 +35,17 @@ def get_supply():
     team_funds = '0xf0035bdf672067cF2e6Be75dED6F4e008EE9536d'
     otc_funds = '0xc4CdD4C5C730b32faDb4cC38Ec55b4E24ab69CAe'
     vested_funds = '0x5ED75c4FC1Ed359AAe12E142c570F2A8AC492402'
-    temporary_holding = '0x18049311bdf789d9ea80f3a5ffad754fa86d2a8d'
+    temporary_holding = '0x18049311bdf789d9ea80f3a5ffad754fa86d2a8d' #for anonymity mining rewards
 
     accounts = [community_funds, ecosystem_funds,
                 team_funds, otc_funds, vested_funds, temporary_holding]
 
     for account in accounts:
-        wallet_balance = int(json.loads(requests.get(
-            wallet_supply_url.replace('wallet_address', account)).text)['result'])
-        circulating_supply -= wallet_balance
+        wallet_balance_old = int(json.loads(requests.get(
+            wallet_supply_url_old.replace('wallet_address', account)).text)['result'])
+        wallet_balance_new = int(json.loads(requests.get(
+            wallet_supply_url_new.replace('wallet_address', account)).text)['result'])
+        circulating_supply -= wallet_balance_old + wallet_balance_new
 
     return adjust_decimals(total_supply), adjust_decimals(circulating_supply)
 
